@@ -18,7 +18,7 @@ function Board({xIsNext, squares, onPlay}) {
   const numCols = numRows; //just for readability, I think it's nice :)
 
   function handleClick(i) {
-    if(calculateWinner(squares) || squares[i])
+    if(findWinner(squares) || squares[i])
     {
       return;
     }
@@ -32,21 +32,22 @@ function Board({xIsNext, squares, onPlay}) {
     onPlay(nextSquares);
   }
 
-  const winner = calculateWinner(squares);
+  const winner = findWinner(squares);
   let status;
   if(winner) {
-    status = "Winner: " + winner;
+    status = "Winner: " + winner;    
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
 
+  const winningLine = findWinningLine(squares);
   const boardReturn = [];
-  //let count = 0; //Why doesn't count work? this gave me so much grief >:(
+  let count = 0;
   for(let x = 0; x < numRows; x++) {
     const row = [];
-    for(let y = 0; y < numCols; y++) {        
-        row.push(<Square value={squares[3*y + x /*count*/]} onSquareClick={() => handleClick(3*y + x /*count*/)} key={y}/>)
-        //count++;
+    for(let y = 0; y < numCols; y++) {
+        row.push(<Square value={squares[/*3*y + x*/count*1]} onSquareClick={() => handleClick(/*3*y + x*/ count*1)} key={y}/>)
+        count++;
       }
       boardReturn.push(<div className="board-row" key={x}>{row}</div>);
   }
@@ -112,7 +113,15 @@ export default function Game() {
   )
 }
 
-function calculateWinner(squares) {
+function findWinner(squares)
+{
+  let winningLine = findWinningLine(squares)  
+
+  if(winningLine) return squares[winningLine[0]];
+  return null;
+}
+
+function findWinningLine(squares) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -126,8 +135,19 @@ function calculateWinner(squares) {
   for(let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if(squares[a] && squares [a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+        return [a, b, c];
       }
     }
     return null;
+}
+
+function highlightLine(winningLine)
+{
+  if(!winningLine) return;
+
+  console.log(winningLine);
+
+  winningLine.forEach(square => {
+    square.state({class: 'squareHighlight'});
+  });
 }
