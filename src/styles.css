@@ -70,6 +70,22 @@
     text-align: center;
     width: 34px;
   }
+
+  .squareHighlight {
+    background: #ffed61;
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 34px;
+  }
+
   .square:hover {
     background: #ababab;
   }

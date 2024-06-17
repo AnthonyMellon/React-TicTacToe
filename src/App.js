@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-function Square({value, onSquareClick}) {  
+function Square({value, onSquareClick, className}) {  
 
   return (
     <button
-      className="square"
+      className={className}
       onClick={onSquareClick}
     >
       {value}
@@ -14,8 +14,8 @@ function Square({value, onSquareClick}) {
 
 function Board({xIsNext, squares, onPlay}) {
 
-  const numRows = Math.sqrt(squares.length);
-  const numCols = numRows; //just for readability, I think it's nice :)
+  const numRows = 3;
+  const numCols = 3
 
   function handleClick(i) {
     if(findWinner(squares) || squares[i])
@@ -46,7 +46,11 @@ function Board({xIsNext, squares, onPlay}) {
   for(let x = 0; x < numRows; x++) {
     const row = [];
     for(let y = 0; y < numCols; y++) {
-        row.push(<Square value={squares[/*3*y + x*/count*1]} onSquareClick={() => handleClick(/*3*y + x*/ count*1)} key={y}/>)
+      let square = 3*y + x;
+      let className;
+      if(winningLine && (square === winningLine[0] || square === winningLine[1] || square === winningLine[2])) className = 'squareHighlight';
+      else className = 'square'
+        row.push(<Square value={squares[square]} onSquareClick={() => handleClick(square)} className={className} key={y}/>);        
         count++;
       }
       boardReturn.push(<div className="board-row" key={x}>{row}</div>);
@@ -139,15 +143,4 @@ function findWinningLine(squares) {
       }
     }
     return null;
-}
-
-function highlightLine(winningLine)
-{
-  if(!winningLine) return;
-
-  console.log(winningLine);
-
-  winningLine.forEach(square => {
-    square.state({class: 'squareHighlight'});
-  });
 }
